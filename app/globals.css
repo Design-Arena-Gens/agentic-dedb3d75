@@ -1,0 +1,152 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+
+html, body {
+  height: 100%;
+  background: radial-gradient(1200px 800px at 20% -10%, rgba(0,255,240,0.08), transparent 60%),
+              radial-gradient(1000px 600px at 120% 110%, rgba(255,0,234,0.06), transparent 60%),
+              #0a0a0f;
+}
+
+@layer utilities {
+  .noise {
+    position: relative;
+  }
+  .noise::after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: -1px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.12'/></svg>");
+    mix-blend-mode: overlay;
+    animation: noise-move 1.2s steps(3) infinite;
+  }
+  .scanlines::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.04) 0px,
+      rgba(255,255,255,0.04) 1px,
+      transparent 2px,
+      transparent 4px
+    );
+    mix-blend-mode: soft-light;
+    pointer-events: none;
+  }
+}
+
+@keyframes noise-move {
+  0% { transform: translate(0,0) }
+  25% { transform: translate(-3%, 2%) }
+  50% { transform: translate(2%, -1%) }
+  75% { transform: translate(1%, 2%) }
+  100% { transform: translate(0,0) }
+}
+
+@layer components {
+  .cyber-btn {
+    @apply relative inline-flex items-center justify-center px-6 py-3 font-mono tracking-widest uppercase text-sm text-white rounded-md transition-colors duration-200 select-none;
+    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    border: 1px solid rgba(255,255,255,0.18);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.08) inset,
+      0 8px 24px rgba(0,0,0,0.45);
+  }
+
+  .cyber-btn:hover {
+    border-color: rgba(0,255,240,0.5);
+  }
+
+  .cyber-btn::before {
+    /* animated border glow */
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 10px;
+    background: conic-gradient(from 180deg at 50% 50%, rgba(0,255,240,0.0), rgba(0,255,240,0.5), rgba(255,0,234,0.35), rgba(250,255,0,0.35), rgba(0,255,240,0.0));
+    filter: blur(8px);
+    opacity: 0.0;
+    transition: opacity 200ms ease;
+    z-index: 0;
+  }
+  .cyber-btn:hover::before { opacity: 0.9 }
+
+  .cyber-btn .content {
+    position: relative;
+    z-index: 2;
+    letter-spacing: 0.2em;
+    text-shadow: 0 0 6px rgba(0,255,240,0.6), 0 0 12px rgba(255,0,234,0.4);
+  }
+
+  .cyber-btn .glitch {
+    position: absolute;
+    inset: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 150ms ease;
+  }
+  .cyber-btn:hover .glitch { opacity: 1 }
+
+  .cyber-btn .glitch > span {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,255,240,0.18), rgba(255,0,234,0.18));
+    mix-blend-mode: screen;
+  }
+
+  .glitch .slice {
+    position: absolute;
+    left: -4%;
+    width: 108%;
+    height: 8%;
+    background: linear-gradient(90deg, rgba(0,255,240,0.8), rgba(255,0,234,0.8));
+    filter: blur(0.6px);
+    opacity: 0.0;
+    animation: glitch-slice 1.4s infinite steps(2, jump-none) alternate;
+  }
+
+  .glitch .slice:nth-child(1) { top: 10%; animation-delay: 0ms; }
+  .glitch .slice:nth-child(2) { top: 25%; animation-delay: 120ms; }
+  .glitch .slice:nth-child(3) { top: 40%; animation-delay: 240ms; }
+  .glitch .slice:nth-child(4) { top: 55%; animation-delay: 360ms; }
+  .glitch .slice:nth-child(5) { top: 70%; animation-delay: 480ms; }
+  .glitch .slice:nth-child(6) { top: 85%; animation-delay: 600ms; }
+
+  @keyframes glitch-slice {
+    0%   { transform: translateX(0); opacity: 0.0 }
+    4%   { transform: translateX(-6px); opacity: 0.25 }
+    8%   { transform: translateX(6px); opacity: 0.4 }
+    12%  { transform: translateX(-4px); opacity: 0.25 }
+    16%  { transform: translateX(0); opacity: 0.0 }
+    100% { transform: translateX(0); opacity: 0.0 }
+  }
+
+  .cyber-btn .scanline {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      0deg,
+      rgba(255,255,255,0) 0%,
+      rgba(255,255,255,0.05) 2%,
+      rgba(255,255,255,0) 4%
+    );
+    background-size: 100% 6px;
+    opacity: 0.0;
+    animation: scan 2.5s linear infinite;
+    border-radius: 8px;
+    pointer-events: none;
+  }
+  .cyber-btn:hover .scanline { opacity: 0.6 }
+
+  @keyframes scan {
+    0%   { background-position-y: 100% }
+    100% { background-position-y: 0% }
+  }
+}
